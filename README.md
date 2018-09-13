@@ -1,5 +1,7 @@
 # coexp-pipe
-Steps to identify co-expressed gene sets (i.e. modules) in gene co-expression networks 
+Set of scripts to identify co-expressed gene sets (i.e., modules) in gene co-expression networks. 
+
+See [Wisecaver et al. 2017 Plant Cell](https://www.ncbi.nlm.nih.gov/pubmed/28408660) | [PDF](https://static1.squarespace.com/static/59c96b9a51a584c476f1f6f1/t/59dc24f4a9db09b4a109ae77/1507599609212/Plant+Cell+2017+Wisecaver.pdf)
 
 1. Filter your gene expression matrix if necessary to remove genes that are not expressed using the prefilter_matrix.pl perl script
 ```
