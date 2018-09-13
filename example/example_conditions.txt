@@ -1,0 +1,15 @@
+condition
+Light_WTA	LIGHT
+Light_WTB	LIGHT
+Light_WTC	LIGHT
+Dark_WTA	DARK
+Dark_WTB	DARK
+Dark_WTC	DARK
+Periderm_1	PERIDERM
+Periderm_2	PERIDERM
+Periderm_3	PERIDERM
+Vascular_1	VASCULAR
+Vascular_2	VASCULAR
+Vascular_3	VASCULAR
+Roots_1	WHOLEROOT
+Leaves_1	LEAF
