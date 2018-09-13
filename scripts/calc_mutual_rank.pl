@@ -26,8 +26,8 @@ my $usage = "\n\tUsage Error:
 	-o: <FILENAME> OUTFILE: path to output file
 	
 	General:
-	-c: <NUMBER> PCC_THRESHOLD: retained edges must have a PCC >= this value (default = 0.3)
-	-w: <NUMBER> WEIGHT_THRESHOLD: retained edges must have a weight (transformed MR) >= this value (default = 0.01)
+	-c: <NUMBER> PCC_THRESHOLD: retained edges must have a PCC > this value (default = 0.3)
+	-w: <NUMBER> WEIGHT_THRESHOLD: retained edges must have a weight (transformed MR) > this value (default = 0.01)
 
 	\n\n";
 
@@ -102,7 +102,7 @@ foreach my $pair (sort { $bighash{$b} <=> $bighash{$a} } keys %bighash) {
 	print OFIL "$gene1\t$gene2\t$cor\t$mr";
 	foreach my $decay (@decay_array){
 		my $weight = exp(-1 * ($mr -1) / $decay);
-		if ($weight < $WEIGHT_THRESHOLD){
+		if ($weight <= $WEIGHT_THRESHOLD){
 			$weight = 0;
 		}
 		print OFIL "\t$weight";

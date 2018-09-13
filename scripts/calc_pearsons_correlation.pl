@@ -24,7 +24,7 @@ my $usage = "\n\tUsage Error:
 	-o: <DIRECTORY> OUTDIR: path to output directory
 	
 	General:
-	-t: <INTEGER> THREADS: multithreaded using perl fork (default = 20)
+	-t: <INTEGER> THREADS: multithreaded using perl fork (default = 1)
 
 	\n\n";
 
@@ -53,7 +53,7 @@ unless (-d $OUTPATH) {
     system("mkdir $OUTPATH");
 }
 
-my $THREADS = 20; 
+my $THREADS = 1; 
 if ($opts{t}) { if ($opts{t} =~ m/^\d+$/) { 
 	if (int($opts{t}) eq $opts{t}) { $THREADS = "$opts{t}"; }} else { die "\n\tInput <t>\n$usage"; } }
 
