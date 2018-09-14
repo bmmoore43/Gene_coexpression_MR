@@ -25,5 +25,5 @@ perl scripts/calc_mutual_rank.pl -i rlog_pcc -o rlog_mutual_ranks.txt
 
 5. **Run clusterONE and call co-expressed gene modules**. The user must download [ClusterONE](http://www.paccanarolab.org/cluster-one/) and include the path to the ClusterONE jar file using -c . The user must also specify which decay function to use to call modules (either 5, 10, 25, 50, or 100). Optionally, the user can specify P-value and Quality score cutoffs to exclude low scoring modules from the final output. 
 ```
-perl scripts/calc_clusterone_modules.pl -i rlog_mutual_ranks.txt -c $CLUSTERONE -d 5 -p 0.1 -q 0.1
+perl scripts/calc_clusterone_modules.pl -i rlog_mutual_ranks.txt -c /path/to/clusterone -d 5 -p 0.1 -q 0.1
 ```
