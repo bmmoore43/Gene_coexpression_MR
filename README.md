@@ -13,12 +13,12 @@ perl scripts/prefilter_matrix.pl -i example/example_matrix.txt -o example/exampl
 ```
 Rscript scripts/transform_counts.R example/example_matrix_filtered.txt example/example_conditions.txt
 ```
-3. **Calculate Pearson's correlation (PCC) for all gene pairs.** *But first, decide which transformed matrix (vst or rlog) to use. Look at the resulting PDFs and decide which matrix is best for your dataset.* This step can be multithreaded using -t .
+3. **Calculate Pearson's correlation (PCC) for all gene pairs.** *But first, decide which transformed matrix (vst or rlog) to use. Look at the resulting PDFs from step 2 and decide which matrix is best for your dataset.* This step can be multithreaded using -t .
 ```
 perl scripts/calc_pearsons_correlation.pl -i rlog_transformed.matrix -o rlog_pcc 
 ```
 
-4. **Transform PCCs into Mutual Ranks (MRs) and MRs into edge weights.** MRs are transformed to network edge weights using the geometric decay function <a href="https://www.codecogs.com/eqnedit.php?latex=\fn_phv&space;e^{-(MR-1/x)}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\fn_phv&space;e^{-(MR-1/x)}" title="e^{-(MR-1/x)}" /></a>. The output contains results from five different decay functions with x set to 5, 10, 25, 50, and 100, respectively. Only edges greater than set thresholds will be included in the output file. The user can specify different PCC and edge weight thresholds using -c and -w, respectively. 
+4. **Transform PCCs into Mutual Ranks (MRs) and MRs into edge weights.** MRs are transformed to network edge weights using the exponential decay function <a href="https://www.codecogs.com/eqnedit.php?latex=\fn_phv&space;e^{-(MR-1/x)}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\fn_phv&space;e^{-(MR-1/x)}" title="e^{-(MR-1/x)}" /></a>. The output contains results from five different decay functions with x set to 5, 10, 25, 50, and 100, respectively. Only edges greater than set thresholds will be included in the output file. The user can specify different PCC and edge weight thresholds using -c and -w, respectively. 
 ```
 perl scripts/calc_mutual_rank.pl -i rlog_pcc -o rlog_mutual_ranks.txt
 ```
