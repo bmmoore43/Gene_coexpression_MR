@@ -1,12 +1,11 @@
 #!/bin/sh -l
-#PBS -M jwisecav@gmail.com
+#PBS -M user@purdue.edu
 #PBS -m e
-#PBS -q jwisecav # or jwisecav
+#PBS -q standby
 #PBS -l naccesspolicy=singleuser
 #PBS -l nodes=1:ppn=1
 #PBS -l walltime=48:00:00 
 #PBS -N clusterone
-#PBS -l epilogue=scripts/epilogue.sh
 
 cd $PBS_O_WORKDIR
 
