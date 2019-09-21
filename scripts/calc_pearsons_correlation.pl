@@ -49,7 +49,7 @@ if ($opts{o}) {
 }
 else { die "\n\tInput <o>$usage"; }
 unless (-d $OUTPATH) {
-    print "making $OUTPATH";
+    print "making $OUTPATH\n";
     system("mkdir $OUTPATH");
 }
 
@@ -161,6 +161,8 @@ $mean[2]=&Mean(2);
 $ssxx=&SS(1,1);
 $ssyy=&SS(2,2);
 $ssxy=&SS(1,2);
+
+if ($ssxy == 0 
 
 $correl=&Correl($ssxx,$ssyy,$ssxy);
 
