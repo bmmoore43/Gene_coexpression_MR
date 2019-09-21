@@ -21,12 +21,11 @@ def runCMD(cmd):
 
 def usage():
     print('\n  Usage: '+sys.argv[0]+' -i <input.matrix> -o <output directory> [-t <threads>]')
-    print("    -i: <FILENAME> INFILE: path to input file: matrix of gene counts")
-    print("    -o: <DIRECTORY> OUTDIR: path to output directory. Default creates output directory 'pcc' in working directory.")
-    print("    -t: <INTEGER> THREADS: multithreaded using perl fork (default = 1)\n\n")
+    print("    -i|--infile <FILENAME> INFILE: path to input file: matrix of gene counts")
+    print("    -o|--outdir <DIRECTORY> OUTDIR: path to output directory")
+    print("    -t|--threads <INTEGER> THREADS: multithreaded using perl fork (default = 1)\n\n")
   
 # Set default variables
-output_dirname = 'pcc'
 threads = 1
 
 # Read in command line arguments
@@ -42,16 +41,24 @@ for opt, arg in options:
     if opt in ('-h', '--help'):
         usage()
         sys.exit()
-    elif opt in ('-o', '--output'):
+    elif opt in ('-o', '--outdir'):
         output_dirname = arg
     elif opt in ('-i', '--infile'):
         infile = arg
     elif opt in ('-t', '--threads'):
         threads = int(arg)
 command = " ".join(sys.argv)
-print("\nCOMMAND:", command, '\n')
 
-if os.path.exists(output_dirname) == 'false':
+try:
+    infile
+    output_dirname
+except NameError:
+    usage()
+    sys.exit(2)
+else:
+    print("\nCOMMAND:", command, '\n')
+
+if os.path.exists(output_dirname) == False:
     cmd = 'mkdir ' + output_dirname
     runCMD(cmd)
     print('Creating output directory:', output_dirname, '...\n')

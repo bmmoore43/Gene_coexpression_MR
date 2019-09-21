@@ -72,7 +72,7 @@ foreach my $line (@array) {
 	my @col = split(/\t/, $line);
 	my $gene = shift @col;
 	$gene =~ s/"//g;
-	print "$gene\n";
+	#print "$gene\n";
 		
 	@{$gene_hash{$gene}} = @col;
 }
