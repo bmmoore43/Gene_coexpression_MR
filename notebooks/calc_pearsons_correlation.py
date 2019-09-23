@@ -100,12 +100,22 @@ for gene in geneDict:
         subgeneDict[tct] = []
     
     if gct > subcount:
-        gct = 0
+        gct = 1
         tct += 1
         subgeneDict[tct] = []
         
     subgeneDict[tct].append(gene)
 
+sum = 0
+for tct in subgeneDict:
+    sublen = len(list(subgeneDict[tct]))
+    sum = sum + sublen
+if num_genes != sum:
+    print('WARNING')
+    print('total genes:', num_genes)
+    print('total split genes:', sum)
+    
+    
 # Define function for calculating PCCs
 def sub_fork(subgeneList):
     
