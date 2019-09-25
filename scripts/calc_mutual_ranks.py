@@ -126,6 +126,8 @@ for infile in files:
     fi = open(infile)
     for line in fi:
         [gene2, pcc] = line.rstrip().split('\t')
+        if pcc < min_pcc:
+        	continue
         if gene1 == gene2:
             #print('\tskipping', gene1,gene2)
             continue
@@ -147,7 +149,7 @@ for infile in files:
             continue 
 
     fi.close()
-print('\nREADING COMPLETE!\n\nCalculating MR scores now...\n')
+print('\nREADING COMPLETE!\n\nCalculating mutual ranks now...\n')
 
 for gid in mrDict:
     gene = genelookup[gid]
@@ -174,4 +176,5 @@ for gid in mrDict:
     
     fo.close()
 
+print('\nMutual ranks and PCCs written to output:', outdir, '\nInput:', indir, 'is now redundant, recommend deleting...\n')
 
