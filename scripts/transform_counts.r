@@ -13,13 +13,14 @@ spec = matrix(c(
   'abundances'  , 'a', 1, "character", 'Enter list of abundance estimates from Kallisto (see jupyter notebook tutorial)',
   'lookup'      , 'l', 1, "character", 'Enter transcript to gene lookup file (see jupyter notebook tutorial)',
   'samples'     , 's', 1, "character", 'Enter experimental design file (see jupyter notebook tutorial)',
-  'seqtype'     , 't', 1, "character", 'Full-length or 3 prime tagged RNAseq? Enter [Full/full/F/f or Tag/tag/T/t]'
+  'seqtype'     , 't', 1, "character", 'Full-length or 3 prime tagged RNAseq? Enter [Full/full/F/f or Tag/tag/T/t]',
+  'out'         , 'o', 1, "character", 'Enter base name for all output files'
 ), byrow=TRUE, ncol=5)
 opt = getopt(spec)
 
 # if help was asked for print a friendly message
 # and exit with a non-zero error code
-if ( is.null(opt$abundances) || is.null(opt$lookup) || is.null(opt$samples) || is.null(opt$seqtype)) {
+if ( is.null(opt$abundances) || is.null(opt$lookup) || is.null(opt$samples) || is.null(opt$seqtype) || is.null(opt$out)) {
   cat(getopt(spec, usage=TRUE))
   q(status=1)
 }
@@ -129,11 +130,11 @@ exp_variance <- apply(normalized_vst_matrix, 1, var)
 stats_df$'post-VST expression variance' = exp_variance
 #head(stats_df)
 
-norm_outfil = 'gene_counts_normalized.matrix'
+norm_outfil = paste(opt$out, '_normalized.matrix', sep = '')
 write.table(normalized_matrix, norm_outfil, sep="\t", quote = FALSE)
 
-normVst_outfil = 'gene_counts_normalized_vst_transformed.matrix'
+normVst_outfil = paste(opt$out, '_normalized_vst_transformed.matrix', sep = '')
 write.table(normalized_vst_matrix, normVst_outfil, sep="\t", quote = FALSE)
 
-stats_outfil = 'gene_counts_statistics.txt'
+stats_outfil = paste(opt$out, '_statistics.txt', sep = '')
 write.table(stats_df, stats_outfil, sep="\t", quote = FALSE)

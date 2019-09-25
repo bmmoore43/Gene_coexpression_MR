@@ -34,7 +34,8 @@ def usage():
     print('\n  Usage: '+sys.argv[0]+' -i <input.matrix> -o <output directory> [-t <threads> -k <skipfile>]')
     print("    -i|--infile  <FILENAME>  INFILE: path to input file: matrix of gene counts")
     print("    -o|--outdir  <DIRECTORY> OUTDIR: path to output directory")
-    print("    -t|--threads <INTEGER>   THREADS: multithreaded using perl fork (default = 1)")
+    print("\n    OPTIONAL:")
+    print("    -t|--threads <INTEGER>   THREADS: multithreaded using os.fork (default = 1)")
     print("    -k|--skip    <FILENAME>  SKIPFILE: path to file containing list of gene to skip\n\n")
   
 # Set default variables
