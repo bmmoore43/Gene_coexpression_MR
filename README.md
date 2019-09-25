@@ -1,29 +1,28 @@
 # Mutual Ranks and Modules
+## Jen Wisecaver
+#### 2019-09-25
 Set of scripts to identify co-expressed gene sets (i.e., modules) in gene co-expression networks. 
+
+Transforming Pearson’s correlation coefficents (PCCs) into Mutual Ranks (MRs) — first described by [Obayashi & Kinoshita](https://www.ncbi.nlm.nih.gov/pubmed/19767600) — is a good idea if you want to compare between different datasets and/or functional categories ([Obayashi et al, 2018](https://www.ncbi.nlm.nih.gov/pubmed/29216398); [Liesecke et al, 2018](https://www.ncbi.nlm.nih.gov/pubmed/30022075)). However, the transformation requires significant memory and disk space to compute. Moreover, MRs range from 1 to n-1 (where n is the number of genes in the genome), which does not translate well to network edge weights. We’ve implemented a series of R and Python scripts for creating MRs and gene modules directly from a directory of Kallisto gene abundance estimates. The code as been developed to run on multiple threads when possible, which significantly decreasing the total runtime. Finally, the pipeline applies exponential decay functions to transform MRs into edge weights and call co-expressed gene sets (i.e. modules) using the program [ClusterONE](https://www.paccanarolab.org/cluster-one/). 
 
 See [Wisecaver et al. 2017 Plant Cell](https://www.ncbi.nlm.nih.gov/pubmed/28408660) | [PDF](https://static1.squarespace.com/static/59c96b9a51a584c476f1f6f1/t/59dc24f4a9db09b4a109ae77/1507599609212/Plant+Cell+2017+Wisecaver.pdf)
 
 ## Steps
-1. **Filter gene expression matrix.** If necessary, remove genes that are not expressed using the prefilter_matrix.pl perl script. Requires [Math::Round](https://metacpan.org/pod/Math::Round) which you may need to install.
+An in depth [tutorial](https://github.rcac.purdue.edu/jwisecav/coexp-pipe/blob/master/tutorial/mutual_ranks_to_modules.ipynb) is provided and includes information on files types, run time, memory requirements, etc. The TL:DR steps are provided below. 
+
+1. **Create a gene expression matrix** 
 ```
-perl scripts/prefilter_matrix.pl -i example/example_matrix.txt -o example/example_matrix_filtered.txt 
+Rscript ../scripts/transform_counts.r -a example/abundance_files.txt -l example/transcripts2genes.txt -s example/sample_conditions.txt -t tag -o example/gene_counts 
 ```
 
-2. **Transform the filtered raw counts into variance stabilized abundance estimates.** Requires several R libraries, which you may need to install. Modified from this [DESeq2 vignette](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#pre-filtering-the-dataset)
+
+2. **Calculate PCC and MR for all gene pairs**
 ```
-Rscript scripts/transform_counts.R example/example_matrix_filtered.txt example/example_conditions.txt
-```
-3. **Calculate Pearson's correlation (PCC) for all gene pairs.** *But first, decide which transformed matrix (vst or rlog) to use. Look at the resulting PDFs from step 2 and decide which matrix is best for your dataset.* This step can be multithreaded using -t .
-```
-perl scripts/calc_pearsons_correlation.pl -i rlog_transformed.matrix -o rlog_pcc 
+python ../scripts/calc_mr_pcc.py -i example/gene_counts_normalized.matrix -o example/gene_counts_normalized_mr -t 20
 ```
 
-4. **Transform PCCs into Mutual Ranks (MRs) and MRs into edge weights.** MRs are transformed to network edge weights using the exponential decay function <a href="https://www.codecogs.com/eqnedit.php?latex=\fn_phv&space;e^{-(MR-1/x)}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\fn_phv&space;e^{-(MR-1/x)}" title="e^{-(MR-1/x)}" /></a>. The output contains results from five different decay functions with x set to 5, 10, 25, 50, and 100, respectively. Only edges greater than set thresholds will be included in the output file. The user can specify different PCC and edge weight thresholds using -c and -w, respectively. 
-```
-perl scripts/calc_mutual_rank.pl -i rlog_pcc -o rlog_mutual_ranks.txt
-```
 
-5. **Run clusterONE and call co-expressed gene modules**. The user must include the path to the [ClusterONE](http://www.paccanarolab.org/cluster-one/) jar file using -c . The user must also specify which decay function to use to call modules (either 5, 10, 25, 50, or 100). Optionally, the user can specify P-value and Quality score cutoffs to exclude low scoring modules from the final output. 
+3. **Run clusterONE and call co-expressed gene modules** 
 ```
-perl scripts/calc_clusterone_modules.pl -i rlog_mutual_ranks.txt -c scripts/cluster_one-1.0.jar -d 5 -p 0.1 -q 0.1
+python ../scripts/create_network_and_modules.py -i example/gene_counts_normalized_mr -c ../scripts/cluster_one-1.0.jar -d 5
 ```
