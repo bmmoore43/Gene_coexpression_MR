@@ -1,5 +1,5 @@
 # Mutual Ranks and Modules
-## Jen Wisecaver
+## [Jen Wisecaver](https://www.wisecaverlab.com)
 #### 2019-09-25
 Set of scripts to identify co-expressed gene sets (i.e., modules) in gene co-expression networks. 
 
