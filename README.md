@@ -1,4 +1,4 @@
-# Mutual Ranks and Modules
+# mr2mods: Mutual Ranks to Modules workflow
 ## [Jen Wisecaver](https://www.wisecaverlab.com)
 #### 2019-09-25
 Set of scripts to identify co-expressed gene sets (i.e., modules) in gene co-expression networks. 
