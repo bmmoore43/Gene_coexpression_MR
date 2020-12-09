@@ -99,7 +99,7 @@ else:
 try:
     basename
 except NameError:
-    basename = indir
+    basename = indir.split('/')[-1]
 
 abcfile = basename + '_' + f"{decay:03d}" + '.abc'
 csvfile = basename + '_' + f"{decay:03d}" + '.modules.csv'
