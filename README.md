@@ -8,7 +8,7 @@ Transforming Pearson’s correlation coefficents (PCCs) into Mutual Ranks (MRs) 
 See [Wisecaver et al. 2017 Plant Cell](https://www.ncbi.nlm.nih.gov/pubmed/28408660) | [PDF](https://static1.squarespace.com/static/59c96b9a51a584c476f1f6f1/t/59dc24f4a9db09b4a109ae77/1507599609212/Plant+Cell+2017+Wisecaver.pdf)
 
 ## Steps
-An in depth [tutorial](https://github.rcac.purdue.edu/jwisecav/coexp-pipe/blob/master/tutorial/mutual_ranks_to_modules.ipynb) is provided and includes information on files types, run time, memory requirements, etc. The TL:DR steps are provided below. 
+An in depth [tutorial](https://github.itap.purdue.edu/jwisecav/mr2mods/blob/master/tutorial/mutual_ranks_to_modules.ipynb) is provided and includes information on files types, run time, memory requirements, etc. The TL:DR steps are provided below. 
 
 1. **Create a gene expression matrix** 
 ```
