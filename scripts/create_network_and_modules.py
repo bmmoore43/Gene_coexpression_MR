@@ -8,6 +8,7 @@ import getopt
 import glob
 import subprocess
 import numpy as np
+import re
 
 def runCMD(cmd):
     val = subprocess.Popen(cmd, shell=True).wait()
@@ -22,9 +23,9 @@ def runCMD(cmd):
 def usage():
     print('\nUsage: '+sys.argv[0]+' -i <mr directory> -c <cluster one jar> -d <decay> [-o <output base name> -w <min edge weight> -p <max pvalue> -q <min quality>')
     print("    -i|--indir       <DIRECTORY> path to directory of gene mutual ranks")
-    print("    -c|--clusterone  <FILE> path to clusterone jar file")
     print("    -d|--decay       <INTEGER> decay constant to use for calculating network edge weights")
     print("\n    OPTIONAL:")
+    print("    -c|--clusterone  <FILE> path to clusterone jar file (default = cluster_one-1.0.jar located in same directory as python script)")
     print("    -o|--out         <NAME> base name for all output files (default = same as input directory")
     print("    -w|--minweight   <FLOAT> minimum network edge weight (default = 0.01)")
     print("    -p|--maxpval     <FLOAT> retained modules must have p value less than or equal to this value (default = 1 to retain all modules)")
@@ -47,6 +48,8 @@ maxpval = 1
 minqual = 0
 minweight = 0.01
 prefix = ''
+clusterone = os.path.realpath(__file__)
+clusterone = os.path.split(clusterone)[0] + '/cluster_one-1.0.jar'
 
 for opt, arg in options:
     if opt in ('-h', '--help'):
@@ -74,7 +77,6 @@ command = " ".join(sys.argv)
 
 try:
     indir
-    clusterone
     decay
 except NameError:
     usage()
@@ -99,7 +101,8 @@ else:
 try:
     basename
 except NameError:
-    basename = indir.split('/')[-1]
+    basename = re.sub('/$', '', indir) 
+    basename = basename.split('/')[-1]
 
 abcfile = basename + '_' + f"{decay:03d}" + '.abc'
 csvfile = basename + '_' + f"{decay:03d}" + '.modules.csv'
