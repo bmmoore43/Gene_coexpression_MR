@@ -1,9 +1,10 @@
+#!/usr/bin/env Rscript
+
 ## 20190921
 ## Jen Wisecaver
 ## Normalize and transform an RNAseq counts matrix
 ##
 ## See transform_count jupyter notebook for walkthrough
-## Usage: Rscript transform_counts.R counts.matrix conditions.txt
 
 library('getopt')
 # get options, using the spec as defined by the enclosed list.
@@ -12,6 +13,7 @@ spec = matrix(c(
   'help'        , 'h', 0, "logical", '',
   'matrix'      , 'm', 1, "character", 'Enter path to preformated expression matrix for DEseq',
   'samples'     , 's', 1, "character", 'Enter experimental design file (see jupyter notebook tutorial)',
+  'bltype'      , 'b', 1, "character", 'Blind vst transformation to exp design? Enter [FALSE/False/false/F/f or TRUE/True/true/T/t]',
   'out'         , 'o', 1, "character", 'Enter base name for all output files'
 ), byrow=TRUE, ncol=5)
 opt = getopt(spec)
@@ -49,7 +51,21 @@ dds_filt <- dds[ rowSums(counts(dds)) > 0, ]
 normalized_matrix <- counts(dds_filt, normalized = TRUE)
 #head(normalized_matrix)
 
-vsd <- vst(dds_filt, blind = FALSE)
+BLINDED <- 'FALSE'
+if ( !is.null(opt$bltype) ) {
+	bltype <- opt$bltype
+
+	if (bltype == 'true' || bltype == 'True' || bltype == 'TRUE' || bltype == 'T' || bltype == 't'){
+		BLINDED <- 'TRUE'
+	} 
+
+	if (bltype == 'false' || bltype == 'False' || bltype == 'FALSE' || bltype == 'F' || bltype == 'f'){
+		BLINDED <- 'FALSE'
+	} 
+}
+
+paste('vst options: blind = ', BLINDED)
+vsd <- vst(dds_filt, blind = BLINDED)
 normalized_vst_matrix <- assay(vsd)
 #head(normalized_vst_matrix)
 

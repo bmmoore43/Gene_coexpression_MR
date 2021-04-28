@@ -1,9 +1,10 @@
+#!/usr/bin/env Rscript
+
 ## 20190921
 ## Jen Wisecaver
 ## Normalize and transform an RNAseq counts matrix
 ##
 ## See transform_count jupyter notebook for walkthrough
-## Usage: Rscript transform_counts.R counts.matrix conditions.txt
 
 library('getopt')
 # get options, using the spec as defined by the enclosed list.
@@ -14,13 +15,14 @@ spec = matrix(c(
   'lookup'      , 'l', 1, "character", 'Enter transcript to gene lookup file (see jupyter notebook tutorial)',
   'samples'     , 's', 1, "character", 'Enter experimental design file (see jupyter notebook tutorial)',
   'seqtype'     , 't', 1, "character", 'Full-length or 3 prime tagged RNAseq? Enter [Full/full/F/f or Tag/tag/T/t]',
+  'bltype'      , 'b', 1, "character", 'Blind vst transformation to exp design? Enter [FALSE/False/false/F/f or TRUE/True/true/T/t]',
   'out'         , 'o', 1, "character", 'Enter base name for all output files'
 ), byrow=TRUE, ncol=5)
 opt = getopt(spec)
 
 # if help was asked for print a friendly message
 # and exit with a non-zero error code
-if ( is.null(opt$abundances) || is.null(opt$lookup) || is.null(opt$samples) || is.null(opt$seqtype) || is.null(opt$out)) {
+if ( is.null(opt$abundances) || is.null(opt$lookup) || is.null(opt$samples) || is.null(opt$out)) {
   cat(getopt(spec, usage=TRUE))
   q(status=1)
 }
@@ -52,16 +54,18 @@ samplefile <- opt$samples
 sampleTable <- read.table(samplefile, sep="\t", header=TRUE)
 #head(sampleTable)
 
-CFA <- 'no'
-seqtype <- opt$seqtype
+CFA <- 'scaledTPM'
+if ( !is.null(opt$seqtype) ) {
+	seqtype <- opt$seqtype
 
-if (seqtype == 'full' || seqtype == 'Full' || seqtype == 'F' || seqtype == 'f'){
-	CFA <- 'scaledTPM'
-} 
+	if (seqtype == 'full' || seqtype == 'Full' || seqtype == 'F' || seqtype == 'f'){
+		CFA <- 'scaledTPM'
+	} 
 
-if (seqtype == 'tag' || seqtype == 'Tag' || seqtype == 'T' || seqtype == 't'){
-	CFA <- 'no'
-} 
+	if (seqtype == 'tag' || seqtype == 'Tag' || seqtype == 'T' || seqtype == 't'){
+		CFA <- 'no'
+	} 
+}
 
 library(tximport)
 library(rhdf5)
@@ -82,7 +86,21 @@ dds_filt <- dds[ rowSums(counts(dds)) > 0, ]
 normalized_matrix <- counts(dds_filt, normalized = TRUE)
 #head(normalized_matrix)
 
-vsd <- vst(dds_filt, blind = FALSE)
+BLINDED <- 'FALSE'
+if ( !is.null(opt$bltype) ) {
+	bltype <- opt$bltype
+
+	if (bltype == 'true' || bltype == 'True' || bltype == 'TRUE' || bltype == 'T' || bltype == 't'){
+		BLINDED <- 'TRUE'
+	} 
+
+	if (bltype == 'false' || bltype == 'False' || bltype == 'FALSE' || bltype == 'F' || bltype == 'f'){
+		BLINDED <- 'FALSE'
+	} 
+}
+
+paste('vst options: blind = ', BLINDED)
+vsd <- vst(dds_filt, blind = BLINDED)
 normalized_vst_matrix <- assay(vsd)
 #head(normalized_vst_matrix)
 
